@@ -129,7 +129,9 @@
         let out = `<p class="term-line term-success">Directorio activo (${cards.length} herramientas):</p><div class="term-table">`;
         cards.forEach((c) => {
           const name = c.querySelector('h3')?.textContent || '';
-          const author = c.querySelector('.author')?.textContent?.trim() || '';
+          const rawAuthor = c.querySelector('.author')?.textContent || '';
+          const authorMatch = rawAuthor.match(/@[A-Za-z0-9_.-]+/);
+          const author = authorMatch ? authorMatch[0] : rawAuthor.trim();
           const href = c.getAttribute('href');
           out += `<div><b>${name}</b></div><div>${author} &mdash; <a class="term-link" href="${href}">ver ficha ↗</a></div>`;
         });
