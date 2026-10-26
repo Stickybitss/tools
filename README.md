@@ -25,7 +25,6 @@ Tú mantienes el control de tu proyecto: solo enlazamos a tu repositorio de GitH
 
 Más detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
 
----
 
 ## Aviso
 
