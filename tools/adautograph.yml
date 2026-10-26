@@ -1,0 +1,7 @@
+name: "C4sh$R"
+repo: https://github.com/C4sh3R/ADAutoGraph
+description: "ADAutoGraph visualiza relaciones, permisos y rutas de ataque en Active Directory, integrando BloodHound y ADCS para facilitar el análisis ofensivo y las auditorías de seguridad."
+category: recon
+tags: [active-directory, bloodhound, adcs, attack-paths, red-team, python]
+author: C4sh3R
+added: 2026-10-26
