@@ -1,0 +1,10 @@
+# DEMO: entrada ilustrativa. Borra este fichero cuando haya herramientas reales.
+name: GhostDNS
+repo: https://github.com/rootkitten/ghostdns
+description: "Auditoría de configuraciones DNS con detección de registros huérfanos y riesgos comunes."
+category: recon
+tags: [recon, dns, python]
+author: rootkitten
+language: Python
+license: BSD-3-Clause
+demo: true

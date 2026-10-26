@@ -1,0 +1,12 @@
+# Plantilla para añadir una herramienta. Copia este fichero como tools/<slug>.yml
+# (los ficheros que empiezan por "_" se ignoran). Ver CONTRIBUTING.md.
+
+name: Mi Herramienta
+repo: https://github.com/usuario/mi-herramienta
+description: "Qué hace y para quién es útil, en una o dos frases (20-200 caracteres)."
+# recon | osint | web | network | defensive | ctf | forensics | other
+category: recon
+tags: [python, cli]
+# Tu usuario de GitHub
+author: usuario
+# language y license son opcionales: se rellenan solos desde GitHub con "npm run build:github"

@@ -1,0 +1,49 @@
+name: Enviar herramienta
+description: Propón una herramienta de tu autoría para el directorio de StickyBit
+title: "[Herramienta] "
+labels: ["nueva-herramienta"]
+body:
+  - type: input
+    id: repo
+    attributes:
+      label: URL del repositorio
+      description: Debe ser público y estar en GitHub.
+      placeholder: https://github.com/usuario/mi-herramienta
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Nombre
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción
+      description: Qué hace y para quién es útil (20-200 caracteres).
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Categoría
+      options: [recon, osint, web, network, defensive, ctf, forensics, other]
+    validations:
+      required: true
+  - type: input
+    id: tags
+    attributes:
+      label: Tags
+      description: Separados por comas, máximo 6 (ej. python, cli, api).
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmaciones
+      options:
+        - label: Soy el autor o tengo permiso del autor para publicarla.
+          required: true
+        - label: El repositorio tiene licencia y un README con instrucciones de uso.
+          required: true
+        - label: No contiene malware, ransomware, datos filtrados ni está pensada para uso malicioso.
+          required: true

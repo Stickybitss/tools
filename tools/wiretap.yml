@@ -1,0 +1,10 @@
+# DEMO: entrada ilustrativa. Borra este fichero cuando haya herramientas reales.
+name: Wiretap
+repo: https://github.com/kernelwave/wiretap
+description: "Inspector minimalista de tráfico para aprender, depurar y documentar protocolos."
+category: network
+tags: [network, rust, cli]
+author: kernelwave
+language: Rust
+license: MIT
+demo: true

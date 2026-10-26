@@ -1,0 +1,35 @@
+name: Aviso a Discord
+
+# Cuando alguien envía una herramienta con el formulario, avisa al canal de moderadores.
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notify:
+    if: contains(github.event.issue.labels.*.name, 'nueva-herramienta')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar aviso
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TITLE: ${{ github.event.issue.title }}
+          URL: ${{ github.event.issue.html_url }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "DISCORD_WEBHOOK_URL no configurado: aviso omitido"
+            exit 0
+          fi
+          jq -n --arg t "$TITLE" --arg u "$URL" --arg a "$AUTHOR" '{
+            username: "StickyBit Tools",
+            allowed_mentions: { parse: [] },
+            embeds: [{
+              title: "🛠️ Nueva herramienta propuesta",
+              description: $t,
+              url: $u,
+              color: 12058418,
+              fields: [{ name: "Enviada por", value: ("@" + $a), inline: true }],
+              footer: { text: "Revísala y ponle la etiqueta «aprobada» para publicarla" }
+            }]
+          }' | curl -sS --fail -H "Content-Type: application/json" -d @- "$WEBHOOK"

@@ -1,0 +1,58 @@
+name: Publicar herramienta aprobada
+
+# Cuando un moderador pone la etiqueta "aprobada" a un issue, se crea solo la propuesta (PR) con la ficha.
+# Después basta con pulsar "Merge" en ese PR para publicarla en la web.
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  create-pr:
+    if: github.event.label.name == 'aprobada'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generar ficha desde el issue
+        id: gen
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if node scripts/issue-to-tool.mjs > result.txt 2>&1; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+          cat result.txt
+
+      - name: Crear PR
+        if: steps.gen.outputs.ok == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: tools/*.yml
+          branch: tool/${{ steps.gen.outputs.slug }}
+          commit-message: "Añade herramienta ${{ steps.gen.outputs.name }}"
+          title: "Añade herramienta: ${{ steps.gen.outputs.name }}"
+          body: |
+            Ficha generada automáticamente desde #${{ github.event.issue.number }}.
+
+            Al hacer **Merge** se publicará en la web y el issue se cerrará.
+
+            Closes #${{ github.event.issue.number }}
+
+      - name: Avisar del error en el issue
+        if: steps.gen.outputs.ok == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body-file result.txt
+          gh issue edit "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --remove-label aprobada

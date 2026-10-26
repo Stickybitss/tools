@@ -1,0 +1,10 @@
+# DEMO: entrada ilustrativa. Borra este fichero cuando haya herramientas reales.
+name: Traceglass
+repo: https://github.com/maria-sec/traceglass
+description: "Kit OSINT para conectar identidades, dominios y metadatos desde una sola interfaz."
+category: osint
+tags: [osint, python, api]
+author: maria-sec
+language: Python
+license: GPL-3.0
+demo: true

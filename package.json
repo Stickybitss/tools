@@ -1,0 +1,16 @@
+{
+  "name": "stickybit-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Directorio comunitario de herramientas de ciberseguridad de StickyBit",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs",
+    "build:github": "node scripts/build.mjs --github",
+    "dev": "node scripts/serve.mjs",
+    "new": "node scripts/new-tool.mjs",
+    "test": "node --test scripts/tools.test.mjs"
+  }
+}
