@@ -6,6 +6,8 @@ Directorio abierto de herramientas de ciberseguridad creadas por la comunidad [S
 
 🌐 **Web:** [tools.stickybit.es](https://tools.stickybit.es)
 
+---
+
 ## ¿Has construido algo potente?
 
 Comparte tu herramienta con la comunidad:
@@ -17,25 +19,14 @@ Comparte tu herramienta con la comunidad:
 Tú mantienes el control de tu proyecto: solo enlazamos a tu repositorio de GitHub.
 
 ### Requisitos
-- Repositorio **público** en GitHub, con **licencia** y un **README** con instrucciones de uso.
+- Repositorio **público** en GitHub, con **licencia** (MIT, Apache, GPL, etc.) y un **README** con instrucciones de uso.
 - Eres el autor o tienes su permiso.
-- **No se admite**: malware, ransomware, stealers, datos filtrados ni herramientas diseñadas para un uso malicioso o no autorizado.
+- **No se admite**: malware, ransomware, stealers, volcados de datos filtrados ni herramientas diseñadas para un uso malicioso o no autorizado.
 
 Más detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Para desarrolladores
-
-Generador estático sin dependencias (solo Node ≥ 20).
-
-```bash
-npm run dev        # servidor local en http://localhost:4321
-npm run build      # genera dist/
-npm run validate   # valida las fichas de tools/
-npm test           # tests
-```
-
-Cada herramienta es un fichero `tools/<slug>.yml`.
+---
 
 ## Aviso
 
-Las herramientas de seguridad deben usarse únicamente en sistemas propios o con autorización expresa. StickyBit no aloja el código de las herramientas ni se responsabiliza de su uso.
+Las herramientas de ciberseguridad deben usarse únicamente en entornos propios de prueba o con autorización expresa del propietario. StickyBit no aloja el código de las herramientas ni se responsabiliza de su uso indebido.
