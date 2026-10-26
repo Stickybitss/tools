@@ -23,18 +23,6 @@ Tú mantienes el control de tu proyecto: solo enlazamos a tu repositorio de GitH
 
 Más detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Para desarrolladores
-
-Generador estático sin dependencias (solo Node ≥ 20).
-
-```bash
-npm run dev        # servidor local en http://localhost:4321
-npm run build      # genera dist/
-npm run validate   # valida las fichas de tools/
-npm test           # tests
-```
-
-Cada herramienta es un fichero `tools/<slug>.yml`.
 
 ## Aviso
 
