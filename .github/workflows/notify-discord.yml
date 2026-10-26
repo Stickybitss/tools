@@ -1,13 +1,15 @@
 name: Aviso a Discord
 
 # Cuando alguien envía una herramienta con el formulario, avisa al canal de moderadores.
+# Se dispara al añadirse la etiqueta "nueva-herramienta": GitHub la pone justo después de crear el issue,
+# así que escuchar solo "opened" podía perder el aviso.
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   notify:
-    if: contains(github.event.issue.labels.*.name, 'nueva-herramienta')
+    if: github.event.label.name == 'nueva-herramienta'
     runs-on: ubuntu-latest
     steps:
       - name: Enviar aviso
