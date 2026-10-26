@@ -1,4 +1,4 @@
-/* Logo en SVG (sustituye al cuadrado verde grande del prototipo) */
+/* Logo en SVG */
 .brand-mark{display:block;width:34px;height:34px;border:0;font:0}
 .brand-mark:after{display:none}
 .brand-mark svg{display:block;width:100%;height:100%}
@@ -10,26 +10,116 @@ a.card{color:inherit;text-decoration:none}
 .stars{color:#8b96a3;font:9px var(--mono)}
 .skip{position:absolute;left:-999px;top:8px;background:var(--acid);color:#071008;padding:8px 12px;border-radius:6px;z-index:50;font-size:12px}
 .skip:focus{left:8px}
-:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
+:focus-visible{outline:2px solid var(--cat-color, var(--acid));outline-offset:3px}
+
+/* ==========================================================================
+   Paleta de color por Categoría (Recon, OSINT, Web, Network, etc.)
+   ========================================================================== */
+.card[data-category="recon"], .tool-card[data-category="recon"]{--cat-color:#10b981;--cat-glow:rgba(16,185,129,.14);--cat-border:rgba(16,185,129,.4)}
+.card[data-category="osint"], .tool-card[data-category="osint"]{--cat-color:#06b6d4;--cat-glow:rgba(6,182,212,.15);--cat-border:rgba(6,182,212,.4)}
+.card[data-category="web"], .tool-card[data-category="web"]{--cat-color:#f59e0b;--cat-glow:rgba(245,158,11,.15);--cat-border:rgba(245,158,11,.4)}
+.card[data-category="network"], .tool-card[data-category="network"]{--cat-color:#a855f7;--cat-glow:rgba(168,85,247,.15);--cat-border:rgba(168,85,247,.4)}
+.card[data-category="defensive"], .tool-card[data-category="defensive"]{--cat-color:#3b82f6;--cat-glow:rgba(59,130,246,.15);--cat-border:rgba(59,130,246,.4)}
+.card[data-category="ctf"], .tool-card[data-category="ctf"]{--cat-color:#eab308;--cat-glow:rgba(234,179,8,.15);--cat-border:rgba(234,179,8,.4)}
+.card[data-category="forensics"], .tool-card[data-category="forensics"]{--cat-color:#ec4899;--cat-glow:rgba(236,72,153,.15);--cat-border:rgba(236,72,153,.4)}
+.card[data-category="other"], .tool-card[data-category="other"]{--cat-color:#b7ff32;--cat-glow:rgba(183,255,50,.15);--cat-border:rgba(183,255,50,.4)}
+
+/* Fondo adaptativo del card según categoría */
+.card{
+  background: radial-gradient(circle at 15% 15%, var(--cat-glow, rgba(183,255,50,.06)) 0%, transparent 65%),
+              linear-gradient(150deg, #10171d 0%, #0b1116 100%) !important;
+  border-color: rgba(255,255,255,.07) !important;
+  transition: transform .22s cubic-bezier(.16,1,.3,1), border-color .22s ease, box-shadow .25s ease, filter .15s ease !important;
+  will-change: transform;
+}
+
+/* Hover con tinte temático */
+.card:hover{
+  transform: translateY(-5px) !important;
+  border-color: var(--cat-border, rgba(183,255,50,.45)) !important;
+  box-shadow: 0 20px 48px -12px rgba(0,0,0,.7), 0 0 28px -6px var(--cat-glow, rgba(183,255,50,.2)) !important;
+}
+
+.card:hover .repo-arrow{
+  background: var(--cat-color, var(--acid)) !important;
+  border-color: var(--cat-color, var(--acid)) !important;
+  color: #071008 !important;
+}
+
+/* Indicador de color en el footer */
+.card .lang i{
+  background: var(--cat-color, var(--acid)) !important;
+  box-shadow: 0 0 8px var(--cat-color, var(--acid));
+}
+
+/* ==========================================================================
+   Micro-animación sutil y viva al pulsar la herramienta (Feedback háptico)
+   ========================================================================== */
+.card:active{
+  transform: translateY(-2px) scale(0.985) !important;
+  transition-duration: .08s !important;
+  filter: brightness(1.08);
+}
+
+/* Flash de luz suave en el borde al hacer click */
+.card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--cat-color, var(--acid));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+
+.card:active::after{
+  opacity: .7;
+}
 
 /* Logos de las herramientas */
-.icon.has-img{background:#0e161c;border-color:#b7ff323a;overflow:hidden;padding:5px}
+.icon.has-img{
+  background: #090e13;
+  border-color: rgba(255,255,255,.09);
+  overflow: hidden;
+  padding: 6px;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.card:hover .icon.has-img{
+  border-color: var(--cat-border, rgba(183,255,50,.4));
+  transform: scale(1.04);
+}
 .icon.has-img img{width:100%;height:100%;object-fit:contain;display:block;border-radius:4px}
-.icon.hero-icon{width:64px;height:64px;border-radius:10px;padding:8px}
+.icon.hero-icon{width:68px;height:68px;border-radius:12px;padding:8px}
 
 /* Ajustes de tamaño y tipografía */
 .card h3{font-size:21px;letter-spacing:-.035em;margin:0 0 10px}
-.card p{color:#9aa7b3;font-size:12.5px;line-height:1.65;margin:0}
+.card p{color:#9aa7b3;font-size:12.8px;line-height:1.68;margin:0}
 .tags{margin-top:18px}
-.tag{padding:4px 8px;font-size:9px;color:#8593a0}
-.author{font-size:10.5px}
-.lang{font-size:10px}
+.tag{
+  padding:4px 8px;
+  font-size:9px;
+  color:#8fa0b0;
+  background: rgba(255,255,255,.02);
+  transition: border-color .15s ease, color .15s ease;
+}
+.card:hover .tag{
+  border-color: rgba(255,255,255,.14);
+}
+.author{font-size:11px}
+.lang{font-size:10.5px}
 
-/* Ficha de herramienta completa con más color y cuerpo */
+/* Ficha de herramienta completa */
 .tool-page{padding:140px 0 110px;max-width:800px}
-.back{display:inline-flex;gap:10px;align-items:center;color:#8b96a3;font:500 12px var(--mono);margin-bottom:28px}
-.back:hover{color:var(--acid)}
-.tool-card{padding:48px;border:1px solid #b7ff3230;border-radius:14px;background:radial-gradient(ellipse 90% 60% at 50% 0%,#152029 0%,#0c1217 100%);box-shadow:0 30px 100px #000c,0 0 40px #b7ff320a}
+.back{display:inline-flex;gap:10px;align-items:center;color:#8b96a3;font:500 12px var(--mono);margin-bottom:28px;transition:transform .2s ease,color .2s ease}
+.back:hover{color:var(--acid);transform:translateX(-3px)}
+.tool-card{
+  padding:48px;
+  border:1px solid var(--cat-border, rgba(183,255,50,.3));
+  border-radius:14px;
+  background:radial-gradient(ellipse 90% 60% at 50% 0%, var(--cat-glow, #152029) 0%, #0c1217 100%);
+  box-shadow:0 30px 100px #000c, 0 0 40px var(--cat-glow, rgba(183,255,50,.08));
+}
 .tool-card .icon{margin-bottom:26px}
 .tool-card h1{font-size:clamp(36px,6vw,56px);letter-spacing:-.055em;margin:0 0 10px;line-height:1.02;color:#fff}
 .tool-card .modal-author{display:inline-block;color:var(--acid);font:500 12px var(--mono)}
@@ -45,6 +135,9 @@ a.card{color:inherit;text-decoration:none}
 .btn[aria-disabled=true]{opacity:.45;pointer-events:none}
 .tool-page .modal-actions{margin-top:32px;display:flex;gap:14px}
 .tool-page .modal-actions .btn{flex:0 1 auto;padding:0 24px;min-height:50px}
+
+/* Botones con respuesta háptica */
+.btn:active{transform:translateY(0) scale(0.975)}
 
 /* Página 404 */
 .nf{min-height:70vh;display:grid;place-items:center;text-align:center;padding:160px 0 80px}

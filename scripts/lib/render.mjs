@@ -119,7 +119,7 @@ export function renderTool({ site, tool: t, meta }) {
     : `<a class="btn primary" href="${esc(t.repo)}" target="_blank" rel="noreferrer noopener">Ver en GitHub <span>↗</span></a>`;
   const body = `    <div class="tool-page shell">
       <a class="back" href="../../#tools">← Volver al directorio</a>
-      <article class="tool-card">
+      <article class="tool-card" data-category="${esc(t.category)}">
         ${renderIcon(t, meta, 'hero-icon')}
         <h1>${esc(t.name)}</h1>
         <span class="modal-author">por <a href="https://github.com/${esc(t.author)}" target="_blank" rel="noreferrer noopener">@${esc(t.author)}</a></span>

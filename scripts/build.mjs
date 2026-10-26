@@ -19,7 +19,7 @@ if (problems.length) {
 console.log(`Herramientas válidas: ${tools.length}`);
 const meta = withGithub ? await refreshCache(tools) : readCache();
 
-fs.rmSync(DIST, { recursive: true, force: true });
+fs.rmSync(DIST, { recursive: true, force: true, maxRetries: 5, retryDelay: 60 });
 const write = (rel, content) => {
   const f = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(f), { recursive: true });
