@@ -31,7 +31,7 @@ export async function fetchRepoMeta(url) {
     description: j.description || '',
     stars: j.stargazers_count,
     language: j.language || '',
-    license: j.license?.spdx_id && j.license.spdx_id !== 'NOASSERTION' ? j.license.spdx_id : '',
+    license: j.license?.spdx_id && j.license.spdx_id !== 'NOASSERTION' ? j.license.spdx_id : (j.license?.name || ''),
     archived: !!j.archived,
     private: !!j.private,
     pushed_at: j.pushed_at,
