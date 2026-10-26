@@ -4,4 +4,5 @@ description: "ADAutoGraph visualiza relaciones, permisos y rutas de ataque en Ac
 category: recon
 tags: [active-directory, bloodhound, adcs, attack-paths, red-team, python]
 author: C4sh3R
+logo: https://raw.githubusercontent.com/C4sh3R/ADAutoGraph/main/web/logo.png
 added: 2026-10-26

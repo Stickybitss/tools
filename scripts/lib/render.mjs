@@ -52,12 +52,21 @@ ${body}
 `;
 }
 
+function renderIcon(t, meta, sizeClass = '') {
+  const m = meta[t.slug] || {};
+  const logo = t.logo || m.logo;
+  if (logo) {
+    return `<span class="icon has-img ${sizeClass}"><img src="${esc(logo)}" alt="Logo de ${esc(t.name)}" loading="lazy"></span>`;
+  }
+  return `<span class="icon ${sizeClass}">${esc(initials(t.name))}</span>`;
+}
+
 function card(t, meta) {
   const m = meta[t.slug] || {};
   const search = [t.name, t.author, t.description, t.category, ...t.tags].join(' ').toLowerCase();
   const lang = m.language || t.language;
   const stars = m.stars ? `<span class="stars">★ ${fmtStars(m.stars)}</span>` : '';
-  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top"><span class="icon">${esc(initials(t.name))}</span><span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author"><i class="avatar">${esc(initials(t.author))}</i>@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || CATEGORIES[t.category])}</span></div></a>`;
+  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author"><i class="avatar">${esc(initials(t.author))}</i>@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || CATEGORIES[t.category])}</span></div></a>`;
 }
 
 export function renderHome({ site, tools, meta }) {
@@ -111,14 +120,14 @@ export function renderTool({ site, tool: t, meta }) {
   const body = `    <div class="tool-page shell">
       <a class="back" href="../../#tools">← Volver al directorio</a>
       <article class="tool-card">
-        <span class="icon">${esc(initials(t.name))}</span>
+        ${renderIcon(t, meta, 'hero-icon')}
         <h1>${esc(t.name)}</h1>
         <span class="modal-author">por <a href="https://github.com/${esc(t.author)}" target="_blank" rel="noreferrer noopener">@${esc(t.author)}</a></span>
         <p class="tool-desc">${esc(t.description)}</p>
         ${t.demo ? '<p class="notice">Proyecto ilustrativo para mostrar cómo se ve una ficha completa dentro de StickyBit.</p>' : ''}
         <div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div>
         <div class="meta">${metaItems.map(([k, v]) => `<div><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('')}</div>
-        <p class="notice">Herramientas de seguridad: úsalas solo en sistemas propios o con autorización expresa. StickyBit no aloja el código ni se responsabiliza de su uso.</p>
+        <p class="notice notice-security"><strong>🛡️ Uso responsable:</strong> Utiliza estas herramientas únicamente en entornos propios de prueba o bajo autorización por escrito. StickyBit no aloja binarios ni se responsabiliza de su uso.</p>
         <div class="modal-actions">${repoBtn}<a class="btn" href="../../#tools">Seguir explorando</a></div>
       </article>
     </div>`;

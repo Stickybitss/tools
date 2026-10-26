@@ -4,4 +4,5 @@ description: "CLI minimalista en Bash para Hack The Box. Permite desplegar máqu
 category: other
 tags: [hackthebox, bash, cli, api, vpn, pentesting]
 author: C4sh3R
+logo: https://cdn.simpleicons.org/hackthebox/9FEF00
 added: 2026-10-26

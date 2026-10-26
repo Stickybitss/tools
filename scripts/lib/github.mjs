@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, parseRepo } from './tools.mjs';
+import { detectRepoLogo } from './logo.mjs';
 
 const CACHE = path.join(ROOT, '.cache', 'github.json');
 
@@ -26,6 +27,7 @@ export async function fetchRepoMeta(url) {
   const res = await fetch(`https://api.github.com/repos/${r.owner}/${r.repo}`, { headers });
   if (!res.ok) throw new Error(`GitHub respondió ${res.status} para ${r.owner}/${r.repo}`);
   const j = await res.json();
+  const logo = await detectRepoLogo(url);
   return {
     fullName: j.full_name,
     description: j.description || '',
@@ -36,6 +38,7 @@ export async function fetchRepoMeta(url) {
     private: !!j.private,
     pushed_at: j.pushed_at,
     owner: j.owner?.login || r.owner,
+    logo: logo || '',
     fetchedAt: new Date().toISOString(),
   };
 }
@@ -46,7 +49,7 @@ export async function refreshCache(tools) {
   for (const t of tools.filter((x) => !x.demo)) {
     try {
       cache[t.slug] = await fetchRepoMeta(t.repo);
-      console.log(`  ✓ ${t.slug}: ★ ${cache[t.slug].stars}`);
+      console.log(`  ✓ ${t.slug}: ★ ${cache[t.slug].stars}${cache[t.slug].logo ? ' [logo detectado]' : ''}`);
     } catch (e) {
       console.warn(`  ! ${t.slug}: ${e.message} (se usa la caché/ficha)`);
     }

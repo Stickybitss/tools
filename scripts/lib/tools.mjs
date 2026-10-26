@@ -91,6 +91,7 @@ export function loadTools() {
       author: data.author,
       language: data.language || '',
       license: data.license || '',
+      logo: data.logo || '',
       demo: data.demo === true,
       added: data.added || '',
     });
