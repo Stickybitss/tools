@@ -61,12 +61,18 @@ function renderIcon(t, meta, sizeClass = '') {
   return `<span class="icon ${sizeClass}">${esc(initials(t.name))}</span>`;
 }
 
+function renderAvatar(author, size = 64) {
+  const handle = author.replace(/^@/, '');
+  const url = `https://github.com/${esc(handle)}.png?size=${size}`;
+  return `<span class="avatar has-photo"><img src="${url}" alt="@${esc(handle)}" loading="lazy" onerror="this.style.display='none'"><i>${esc(initials(handle))}</i></span>`;
+}
+
 function card(t, meta) {
   const m = meta[t.slug] || {};
   const search = [t.name, t.author, t.description, t.category, ...t.tags].join(' ').toLowerCase();
   const lang = m.language || t.language;
   const stars = m.stars ? `<span class="stars">★ ${fmtStars(m.stars)}</span>` : '';
-  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author"><i class="avatar">${esc(initials(t.author))}</i>@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || CATEGORIES[t.category])}</span></div></a>`;
+  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author">${renderAvatar(t.author)}@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || CATEGORIES[t.category])}</span></div></a>`;
 }
 
 export function renderHome({ site, tools, meta }) {
@@ -122,7 +128,7 @@ export function renderTool({ site, tool: t, meta }) {
       <article class="tool-card" data-category="${esc(t.category)}">
         ${renderIcon(t, meta, 'hero-icon')}
         <h1>${esc(t.name)}</h1>
-        <span class="modal-author">por <a href="https://github.com/${esc(t.author)}" target="_blank" rel="noreferrer noopener">@${esc(t.author)}</a></span>
+        <span class="modal-author">${renderAvatar(t.author, 80)} por <a href="https://github.com/${esc(t.author)}" target="_blank" rel="noreferrer noopener">@${esc(t.author)}</a></span>
         <p class="tool-desc">${esc(t.description)}</p>
         ${t.demo ? '<p class="notice">Proyecto ilustrativo para mostrar cómo se ve una ficha completa dentro de StickyBit.</p>' : ''}
         <div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div>
