@@ -17,7 +17,7 @@ export const CATEGORIES = {
   other: 'Otros',
 };
 
-const REPO_RE = /^https:\/\/github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)\/?$/;
+const REPO_RE = /^https:\/\/github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+?)(?:[/?#].*)?$/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const TAG_RE = /^[a-z0-9+#.-]{1,20}$/;
 const AUTHOR_RE = /^[A-Za-z0-9_.-]{1,39}$/;
