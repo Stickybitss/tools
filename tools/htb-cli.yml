@@ -1,4 +1,4 @@
-name: "C4sh$R"
+name: "HTB-CLI"
 repo: https://github.com/C4sh3R/htb-cli
 description: "CLI minimalista en Bash para Hack The Box. Permite desplegar máquinas, enviar flags, consultar temporadas y gestionar conexiones VPN directamente desde la terminal."
 category: other
