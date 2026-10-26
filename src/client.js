@@ -84,4 +84,129 @@
     }), { rootMargin: '-35% 0px -55%', threshold: 0 });
     sections.forEach((s) => spy.observe(s));
   }
+
+  /* Terminal interactiva (Hero Shell) */
+  const termWindow = $('#terminal-window');
+  const termBody = $('#term-body');
+  const termOutput = $('#term-output');
+  const termInput = $('#term-input');
+
+  if (termWindow && termInput && termOutput) {
+    const history = [];
+    let histIdx = -1;
+
+    // Foco directo al hacer clic en cualquier parte de la ventana
+    termWindow.addEventListener('click', () => termInput.focus());
+
+    const scrollToBottom = () => {
+      if (termBody) termBody.scrollTop = termBody.scrollHeight;
+    };
+
+    const print = (html) => {
+      const p = document.createElement('div');
+      p.className = 'term-line';
+      p.innerHTML = html;
+      termOutput.appendChild(p);
+      scrollToBottom();
+    };
+
+    const COMMANDS = {
+      help: () => {
+        return `<p class="term-line" style="margin-bottom:6px"><b class="term-success">Comandos disponibles:</b></p>
+<div class="term-table">
+  <div><b>help</b></div><div>Muestra esta lista de ayuda</div>
+  <div><b>tools, ls</b></div><div>Lista las herramientas públicas del arsenal</div>
+  <div><b>open &lt;slug&gt;</b></div><div>Abre la ficha de una herramienta (ej. open adautograph)</div>
+  <div><b>discord</b></div><div>Abre el servidor de Discord (chat.stickybit.es)</div>
+  <div><b>submit</b></div><div>Ir al formulario para publicar tu herramienta</div>
+  <div><b>whoami</b></div><div>Muestra tu identidad en el sistema</div>
+  <div><b>clear</b></div><div>Limpia la pantalla de la terminal</div>
+</div>`;
+      },
+      tools: () => {
+        const cards = [...document.querySelectorAll('.card')];
+        if (!cards.length) return `<p class="term-line dim">No hay herramientas cargadas.</p>`;
+        let out = `<p class="term-line term-success">Directorio activo (${cards.length} herramientas):</p><div class="term-table">`;
+        cards.forEach((c) => {
+          const name = c.querySelector('h3')?.textContent || '';
+          const author = c.querySelector('.author')?.textContent?.trim() || '';
+          const href = c.getAttribute('href');
+          out += `<div><b>${name}</b></div><div>${author} &mdash; <a class="term-link" href="${href}">ver ficha ↗</a></div>`;
+        });
+        out += `</div>`;
+        return out;
+      },
+      ls: () => COMMANDS.tools(),
+      discord: () => {
+        window.open('https://chat.stickybit.es/', '_blank');
+        return `<p class="term-line term-success">✓ Abriendo servidor de Discord: <a class="term-link" href="https://chat.stickybit.es/" target="_blank">chat.stickybit.es ↗</a></p>`;
+      },
+      chat: () => COMMANDS.discord(),
+      submit: () => {
+        const submitSection = document.getElementById('submit');
+        if (submitSection) submitSection.scrollIntoView({ behavior: 'smooth' });
+        return `<p class="term-line term-success">✓ Desplazando a la sección de publicación...</p>`;
+      },
+      whoami: () => {
+        return `<p class="term-line">uid=0(root) gid=0(stickybit) groups=0(root),1337(hacker),42(maker)<br><span class="dim">Permission status: <b class="term-success">GRANTEE</b> &mdash; Happy hacking!</span></p>`;
+      },
+      clear: () => {
+        termOutput.innerHTML = '';
+        return null;
+      }
+    };
+
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const raw = termInput.value.trim();
+        if (!raw) return;
+
+        // Guarda en historial
+        history.push(raw);
+        histIdx = history.length;
+
+        // Imprime el comando ingresado
+        print(`<span class="prompt-arrow">➜</span> <span class="prompt-tilde">~</span> <span class="term-cmd-prev">${raw.replace(/</g, '&lt;')}</span>`);
+        termInput.value = '';
+
+        const parts = raw.split(/\s+/);
+        const cmd = parts[0].toLowerCase();
+        const arg = parts[1]?.toLowerCase();
+
+        if (cmd === 'open') {
+          if (!arg) {
+            print(`<span class="term-error">Uso: open &lt;slug&gt; (ejemplo: open adautograph o open htb-cli)</span>`);
+          } else {
+            const target = document.querySelector(`.card[href*="${arg}"]`);
+            if (target) {
+              print(`<span class="term-success">✓ Abriendo ${arg}...</span>`);
+              location.href = target.getAttribute('href');
+            } else {
+              print(`<span class="term-error">No se encontró la herramienta "${arg}". Escribe 'tools' para ver la lista.</span>`);
+            }
+          }
+        } else if (COMMANDS[cmd]) {
+          const res = COMMANDS[cmd]();
+          if (res) print(res);
+        } else {
+          print(`<span class="term-error">Comando no reconocido: "${cmd}". Escribe <b class="cmd-hint">help</b> para ver los comandos.</span>`);
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (histIdx > 0) {
+          histIdx--;
+          termInput.value = history[histIdx] || '';
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (histIdx < history.length - 1) {
+          histIdx++;
+          termInput.value = history[histIdx] || '';
+        } else {
+          histIdx = history.length;
+          termInput.value = '';
+        }
+      }
+    });
+  }
 })();

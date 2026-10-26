@@ -252,3 +252,141 @@ a.card{color:inherit;text-decoration:none}
 .nf h1{font-size:clamp(40px,8vw,72px);letter-spacing:-.06em;margin:0 0 26px}
 
 @media(max-width:650px){.tool-page{padding-top:120px}.tool-card{padding:28px 22px}.tool-page .modal-actions{flex-direction:column}}
+
+/* ==========================================================================
+   Terminal interactiva (Hero Shell)
+   ========================================================================== */
+.terminal{
+  cursor: text;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.terminal:focus-within{
+  border-color: rgba(183, 255, 50, 0.45);
+  box-shadow: 0 34px 95px rgba(0,0,0,.7), 0 0 30px rgba(183,255,50,.12);
+}
+.term-status{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-style: normal;
+  color: #7b8895;
+  font-size: 8.5px;
+  letter-spacing: .1em;
+}
+.live-dot{
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 8px var(--acid);
+  animation: pulse 2s infinite;
+}
+.term-body{
+  min-height: 290px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 22px 24px;
+  font: 11px/1.85 var(--mono);
+  color: #c9d0d6;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.1) transparent;
+}
+.term-line{
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.term-line.welcome{
+  color: #fff;
+  font-weight: 600;
+}
+.term-ver{
+  color: var(--acid);
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 5px;
+  border: 1px solid rgba(183,255,50,.3);
+  border-radius: 3px;
+  margin-left: 4px;
+}
+.cmd-tag{
+  color: var(--acid);
+  background: rgba(183,255,50,.1);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.term-spacer{
+  height: 12px;
+}
+.term-input-row{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.prompt-arrow{
+  color: var(--acid);
+  font-weight: 700;
+}
+.prompt-tilde{
+  color: #8da0b2;
+}
+.term-input{
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: #f5f7f8;
+  font: inherit;
+  caret-color: var(--acid);
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.term-input::placeholder{
+  color: #43515e;
+}
+.term-cmd-prev{
+  color: #e2e8f0;
+  font-weight: 500;
+}
+.term-success{
+  color: var(--acid);
+}
+.term-error{
+  color: #f87171;
+}
+.term-table{
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 4px 14px;
+  margin: 6px 0 10px;
+  color: #a0aec0;
+}
+.term-table b{
+  color: var(--acid);
+  font-weight: 500;
+}
+.term-link{
+  color: var(--acid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.term-link:hover{
+  color: #d8ff85;
+}
+
+/* Enlace de Discord en navegación */
+.discord-nav-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-dot{
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #5865F2;
+  box-shadow: 0 0 6px #5865F2;
+}
