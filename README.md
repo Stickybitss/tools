@@ -1,69 +1,41 @@
 # StickyBit Tools
 
-Directorio comunitario de herramientas de ciberseguridad (futuro `tools.stickybit.es`).
+Directorio abierto de herramientas de ciberseguridad creadas por la comunidad [StickyBit](https://stickybit.es).
 
-Generador estático **sin dependencias** (solo Node ≥ 20). Produce `dist/`, que se puede alojar en cualquier hosting estático (Cloudflare Pages, GitHub Pages, Netlify…).
+**Aprende. Comparte. Crece.** Proyectos auditables, con código real, publicados por sus propios autores.
 
-## Uso
+🌐 **Web:** [tools.stickybit.es](https://tools.stickybit.es)
+
+## ¿Has construido algo potente?
+
+Comparte tu herramienta con la comunidad:
+
+1. Abre el formulario: [**Enviar herramienta**](https://github.com/Stickybitss/tools/issues/new?template=submit-tool.yml).
+2. Rellena los datos de tu repositorio.
+3. Un moderador la revisa y, si cumple los requisitos, se publica en el directorio.
+
+Tú mantienes el control de tu proyecto: solo enlazamos a tu repositorio de GitHub.
+
+### Requisitos
+- Repositorio **público** en GitHub, con **licencia** y un **README** con instrucciones de uso.
+- Eres el autor o tienes su permiso.
+- **No se admite**: malware, ransomware, stealers, datos filtrados ni herramientas diseñadas para un uso malicioso o no autorizado.
+
+Más detalles en [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Para desarrolladores
+
+Generador estático sin dependencias (solo Node ≥ 20).
 
 ```bash
-npm run dev            # build + servidor en http://localhost:4321 (se reconstruye al editar)
-npm run build          # genera dist/
-npm run build:github   # igual, añadiendo stars/lenguaje/licencia reales desde la API de GitHub
-npm run validate       # valida tools/*.yml
-npm test               # tests
-npm run new -- <url>   # crea tools/<slug>.yml desde un repo de GitHub
+npm run dev        # servidor local en http://localhost:4321
+npm run build      # genera dist/
+npm run validate   # valida las fichas de tools/
+npm test           # tests
 ```
 
-Para `build:github` puedes exportar `GITHUB_TOKEN` y evitar el límite de peticiones.
+Cada herramienta es un fichero `tools/<slug>.yml`.
 
-## Estructura
+## Aviso
 
-```
-tools/*.yml        Una herramienta por fichero (los "_*.yml" se ignoran)
-site.json          URL del sitio, enlaces de comunidad y de envío
-src/               styles.css, extra.css, client.js
-scripts/           build, validate, serve, new-tool, tests
-.github/           Formulario de envío, plantilla de PR y validación en CI
-dist/              Salida (no versionada)
-```
-
-## Qué genera `dist/`
-`index.html`, una ficha por herramienta en `tool/<slug>/`, `tools.json` (API pública), `sitemap.xml`, `robots.txt`, `404.html`.
-
-## Flujo de envío de herramientas
-
-```
-Autor ──▶ botón "Enviar herramienta" ──▶ formulario de GitHub (issue)
-                                              │
-                                              ▼
-                              Aviso en Discord (notify-discord.yml)
-                                              │
-                    moderador revisa y pone la etiqueta «aprobada»
-                                              │
-                                              ▼
-                  Se crea solo un PR con tools/<slug>.yml (approve-tool.yml)
-                                              │
-                         moderador pulsa «Merge» ──▶ se publica la web
-```
-
-Si la ficha no se puede crear (repo privado, sin licencia, duplicado…), el bot comenta el motivo en el issue y quita la etiqueta.
-
-### Configuración (una sola vez, en GitHub)
-
-1. **Webhook de Discord**: en el canal de moderadores → *Editar canal* → *Integraciones* → *Webhooks* → *Nuevo webhook* → copiar la URL.
-2. En el repo: *Settings → Secrets and variables → Actions → New repository secret*
-   - Nombre: `DISCORD_WEBHOOK_URL`, valor: la URL del webhook.
-3. En el repo: *Settings → Actions → General → Workflow permissions*: marcar **Read and write permissions** y **Allow GitHub Actions to create and approve pull requests**.
-4. Crear dos etiquetas (*Issues → Labels*): `nueva-herramienta` y `aprobada`.
-5. Ajustar `site.json` (`repoUrl`, `submitUrl`, `githubUrl`, `discordUrl`) con la organización real.
-
-> La URL del webhook es un secreto: nunca la pongas en el código ni en `site.json`.
-
-## Pendiente antes de publicar
-- [ ] Revisar `site.json` (organización de GitHub, URL del formulario, Discord).
-- [ ] Borrar las entradas `demo: true` al llegar herramientas reales.
-- [ ] Elegir hosting y conectar `tools.stickybit.es`.
-- [ ] Imagen Open Graph para compartir en redes.
-
-Ver [CONTRIBUTING.md](CONTRIBUTING.md) para enviar una herramienta.
+Las herramientas de seguridad deben usarse únicamente en sistemas propios o con autorización expresa. StickyBit no aloja el código de las herramientas ni se responsabiliza de su uso.
