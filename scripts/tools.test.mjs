@@ -27,7 +27,7 @@ test('validateTool: válido y casos de error', () => {
   assert.ok(validateTool('X Y', ok).length);
   assert.ok(validateTool('x', { ...ok, category: 'nope' }).length);
   assert.ok(validateTool('x', { ...ok, repo: 'http://evil.com' }).length);
-  assert.ok(validateTool('x', { ...ok, description: 'corta' }).length);
+  assert.ok(validateTool('x', { ...ok, description: 'ab' }).length);
   assert.ok(validateTool('x', { ...ok, tags: ['UPPER'] }).length);
 });
 

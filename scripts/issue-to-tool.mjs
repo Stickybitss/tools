@@ -13,21 +13,31 @@ const fail = (msgs) => {
   process.exit(1);
 };
 
-const { slug, tool, errors } = issueToTool(parseIssueBody(process.env.ISSUE_BODY));
+let { slug, tool, errors } = issueToTool(parseIssueBody(process.env.ISSUE_BODY));
+
+// Comprobaciones contra GitHub: público, no archivado y con licencia
+let meta = null;
+if (tool.repo) {
+  try {
+    meta = await fetchRepoMeta(tool.repo);
+    if (meta.private) fail('el repositorio es privado');
+    if (meta.archived) fail('el repositorio está archivado');
+    if (!meta.license) fail('el repositorio no declara licencia (es obligatoria)');
+
+    // Si la descripción está vacía o es muy corta, tomamos la de GitHub si existe
+    if ((!tool.description || tool.description.length < 3) && meta.description) {
+      tool.description = meta.description.slice(0, 300);
+      errors = validateTool(slug, tool);
+    }
+  } catch (e) {
+    fail(e.message);
+  }
+}
+
 if (errors.length) fail(errors);
 
 const file = path.join(TOOLS_DIR, `${slug}.yml`);
 if (fs.existsSync(file)) fail(`ya existe una herramienta con el nombre de repositorio "${slug}"`);
-
-// Comprobaciones contra GitHub: público, no archivado y con licencia
-try {
-  const meta = await fetchRepoMeta(tool.repo);
-  if (meta.private) fail('el repositorio es privado');
-  if (meta.archived) fail('el repositorio está archivado');
-  if (!meta.license) fail('el repositorio no declara licencia (es obligatoria)');
-} catch (e) {
-  fail(e.message);
-}
 
 fs.writeFileSync(file, toolToYaml(tool));
 

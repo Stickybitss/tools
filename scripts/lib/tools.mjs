@@ -38,8 +38,8 @@ export function validateTool(slug, t) {
   if (t.name && t.name.length > 40) errors.push('"name" no puede superar 40 caracteres');
   if (t.repo && !parseRepo(t.repo)) errors.push('"repo" debe ser una URL https://github.com/<usuario>/<repo>');
   if (t.description) {
-    if (t.description.length < 20) errors.push('"description" es demasiado corta (mínimo 20 caracteres)');
-    if (t.description.length > 200) errors.push('"description" no puede superar 200 caracteres');
+    if (t.description.length < 3) errors.push('"description" es demasiado corta (mínimo 3 caracteres)');
+    if (t.description.length > 300) errors.push('"description" no puede superar 300 caracteres');
   }
   if (t.category && !(t.category in CATEGORIES)) {
     errors.push(`"category" debe ser una de: ${Object.keys(CATEGORIES).join(', ')}`);

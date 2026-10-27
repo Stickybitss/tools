@@ -23,9 +23,9 @@ body:
     id: description
     attributes:
       label: Descripción
-      description: Qué hace y para quién es útil (20-200 caracteres).
+      description: Breve resumen de qué hace (opcional si el repositorio de GitHub ya tiene descripción).
     validations:
-      required: true
+      required: false
   - type: dropdown
     id: category
     attributes:
