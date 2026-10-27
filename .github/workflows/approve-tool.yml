@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   create-pr:
-    if: github.event.label.name == 'aprobada'
+    if: github.event.label.name == 'aprobada' || github.event.label.name == 'Aprobada'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,4 +55,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body-file result.txt
-          gh issue edit "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --remove-label aprobada
+          gh issue edit "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --remove-label "${{ github.event.label.name }}"
