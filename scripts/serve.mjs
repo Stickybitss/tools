@@ -33,4 +33,4 @@ http.createServer((req, res) => {
   }
   res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
-}).listen(port, () => console.log(`\nhttp://localhost:${port}  (se reconstruye al editar tools/ o src/)`));
+}).listen(port, '0.0.0.0', () => console.log(`\nhttp://localhost:${port}  (se reconstruye al editar tools/ o src/)`));
