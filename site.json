@@ -1,6 +1,7 @@
 {
   "name": "StickyBit Tools",
   "siteUrl": "https://tools.stickybit.es",
+  "mainUrl": "https://www.stickybit.es",
   "repoUrl": "https://github.com/Stickybitss/tools",
   "submitUrl": "https://github.com/Stickybitss/tools/issues/new?template=submit-tool.yml",
   "githubUrl": "https://github.com/Stickybitss",

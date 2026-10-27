@@ -19,7 +19,8 @@ const MARK = '<span class="brand-mark"><svg viewBox="215 215 593 593" aria-hidde
 
 function layout({ site, root, title, description, canonicalPath, body, ogType = 'website' }) {
   const canonical = site.siteUrl.replace(/\/$/, '') + canonicalPath;
-  const discord = site.discordUrl ? `<a href="${esc(site.discordUrl)}" target="_blank" rel="noreferrer">Discord</a>` : '';
+  const mainSite = site.mainUrl ? `<a href="${esc(site.mainUrl)}" target="_blank" rel="noreferrer" class="main-site-nav-link">Web central <b>↗</b></a>` : '';
+  const discord = site.discordUrl ? `<a href="${esc(site.discordUrl)}" target="_blank" rel="noreferrer" class="discord-nav-link">Discord <span class="nav-dot"></span></a>` : '';
   const github = site.githubUrl ? `<a href="${esc(site.githubUrl)}" target="_blank" rel="noreferrer">GitHub</a>` : '';
   return `<!doctype html>
 <html lang="es">
@@ -41,11 +42,11 @@ function layout({ site, root, title, description, canonicalPath, body, ogType = 
 </head>
 <body>
   <a class="skip" href="#main">Saltar al contenido</a>
-  <header><nav class="shell"><a class="brand" href="${root}" aria-label="StickyBit, inicio">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><div class="links"><a href="${root}#tools" data-section="tools">Explorar</a><a href="${root}#manifesto" data-section="manifesto">Comunidad</a>${site.discordUrl ? `<a href="${esc(site.discordUrl)}" target="_blank" rel="noreferrer" class="discord-nav-link">Discord <span class="nav-dot"></span></a>` : ''}<a class="submit-link" href="${root}#submit" data-section="submit">Subir herramienta <b>↗</b></a></div><button class="menu" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></nav></header>
+  <header><nav class="shell"><a class="brand" href="${root}" aria-label="StickyBit, inicio">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><div class="links"><a href="${root}#tools" data-section="tools">Explorar</a><a href="${root}#manifesto" data-section="manifesto">Comunidad</a>${mainSite}${discord}<a class="submit-link" href="${root}#submit" data-section="submit">Subir herramienta <b>↗</b></a></div><button class="menu" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></nav></header>
   <main id="main">
 ${body}
   </main>
-  <footer class="shell"><a class="brand" href="${root}">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><p>Aprender, compartir y crecer en ciberseguridad.</p><div class="foot-links">${github}${discord}<span>© ${new Date().getFullYear()}</span></div></footer>
+  <footer class="shell"><a class="brand" href="${root}">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><p>Aprender, compartir y crecer en ciberseguridad.</p><div class="foot-links"><a href="${esc(site.mainUrl || 'https://www.stickybit.es')}" target="_blank" rel="noreferrer">stickybit.es</a>${github}${discord}<span>© ${new Date().getFullYear()}</span></div></footer>
   <script src="${root}assets/app.js" defer></script>
 </body>
 </html>

@@ -384,6 +384,27 @@ a.card{color:inherit;text-decoration:none}
   color: #d8ff85;
 }
 
+/* Enlace a la web central en navegación */
+.main-site-nav-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #c5d3e0 !important;
+  transition: color .2s ease;
+}
+.main-site-nav-link:hover{
+  color: var(--acid) !important;
+}
+.main-site-nav-link b{
+  font-size: 11px;
+  color: var(--acid);
+  font-weight: 700;
+  transition: transform .15s ease;
+}
+.main-site-nav-link:hover b{
+  transform: translate(1px, -1px);
+}
+
 /* Enlace de Discord en navegación */
 .discord-nav-link{
   display: inline-flex;

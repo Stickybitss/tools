@@ -115,6 +115,7 @@
         return `<p class="term-line" style="margin-bottom:6px"><b class="term-success">Comandos disponibles:</b></p>
 <div class="term-table">
   <div><b>help</b></div><div>Muestra esta lista de ayuda</div>
+  <div><b>web</b></div><div>Abre la web central (www.stickybit.es)</div>
   <div><b>tools, ls</b></div><div>Lista las herramientas públicas del arsenal</div>
   <div><b>open &lt;slug&gt;</b></div><div>Abre la ficha de una herramienta (ej. open adautograph)</div>
   <div><b>discord</b></div><div>Abre el servidor de Discord (chat.stickybit.es)</div>
@@ -143,6 +144,12 @@
         window.open('https://chat.stickybit.es/', '_blank');
         return `<p class="term-line term-success">✓ Abriendo servidor de Discord: <a class="term-link" href="https://chat.stickybit.es/" target="_blank">chat.stickybit.es ↗</a></p>`;
       },
+      web: () => {
+        window.open('https://www.stickybit.es', '_blank');
+        return `<p class="term-line term-success">✓ Abriendo web central: <a class="term-link" href="https://www.stickybit.es" target="_blank">www.stickybit.es ↗</a></p>`;
+      },
+      stickybit: () => COMMANDS.web(),
+      central: () => COMMANDS.web(),
       chat: () => COMMANDS.discord(),
       submit: () => {
         const submitSection = document.getElementById('submit');
