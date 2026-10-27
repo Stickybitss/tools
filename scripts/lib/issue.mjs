@@ -3,6 +3,7 @@ import { CATEGORIES, parseRepo, validateTool } from './tools.mjs';
 // Etiquetas del formulario .github/ISSUE_TEMPLATE/submit-tool.yml -> campo del .yml
 const FIELD_MAP = {
   'URL del repositorio': 'repo',
+  'Nombre de la herramienta': 'name',
   Nombre: 'name',
   'Descripción': 'description',
   'Categoría': 'category',

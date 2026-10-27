@@ -1,20 +1,22 @@
 name: Enviar herramienta
 description: Propón una herramienta de tu autoría para el directorio de StickyBit
-title: "[Herramienta] "
+title: "[Herramienta]: "
 labels: ["nueva-herramienta"]
 body:
+  - type: input
+    id: name
+    attributes:
+      label: Nombre de la herramienta
+      description: El nombre del software o proyecto (ej. ADAutoGraph, SubZero, HTB-CLI).
+      placeholder: MiHerramienta
+    validations:
+      required: true
   - type: input
     id: repo
     attributes:
       label: URL del repositorio
       description: Debe ser público y estar en GitHub.
       placeholder: https://github.com/usuario/mi-herramienta
-    validations:
-      required: true
-  - type: input
-    id: name
-    attributes:
-      label: Nombre
     validations:
       required: true
   - type: textarea
