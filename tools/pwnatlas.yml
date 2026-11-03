@@ -1,0 +1,8 @@
+name: "PwnAtlas"
+website: https://pwnatlas.app/
+description: "PwnAtlas es un buscador gratuito que te dice qué máquina de Hack The Box practicar para cada técnica de hacking. También incluye rutas hacia la OSCP, guías, herramientas y un comparador de certificaciones."
+category: other
+tags: [pwn, htb, machines, tools, guides]
+author: Odracir063
+logo: https://pwnatlas.app/favicon.svg
+added: 2026-11-03
