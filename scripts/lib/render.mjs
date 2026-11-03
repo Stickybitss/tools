@@ -17,8 +17,15 @@ function fmtStars(n) {
 // Logo oficial de StickyBit (proporciones tomadas del original: marco, "t" pixelada y cuadrado verde pequeño)
 const MARK = '<span class="brand-mark"><svg viewBox="215 215 593 593" aria-hidden="true"><rect x="235.5" y="235.5" width="552" height="552" fill="none" stroke="#f2f4f8" stroke-width="41"/><polygon fill="#f2f4f8" points="430,338 512,338 512,430 604,430 604,502 512,502 512,583 614,583 614,655 430,655 430,502 348,502 348,430 430,430"/><rect x="645" y="277" width="102" height="102" fill="#b7ff32"/></svg></span>';
 
-function layout({ site, root, title, description, canonicalPath, body, ogType = 'website' }) {
+const DEFAULT_KEYWORDS = 'herramientas ciberseguridad, hacking ético, pentesting, seguridad ofensiva, red team, herramientas open source, proyectos github, ctf, osint, recon, análisis de vulnerabilidades, stickybit';
+const ROBOTS_INDEX = 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+
+/** Serializa JSON-LD de forma segura dentro de <script> (evita cerrar la etiqueta con "</"). */
+const jsonLd = (items) => items.filter(Boolean).map((o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n  ');
+
+function layout({ site, root, title, description, canonicalPath, body, ogType = 'website', keywords = DEFAULT_KEYWORDS, robots = ROBOTS_INDEX, structured = [] }) {
   const canonical = site.siteUrl.replace(/\/$/, '') + canonicalPath;
+  const ogImage = site.siteUrl.replace(/\/$/, '') + '/og-image.png';
   const mainSite = site.mainUrl ? `<a href="${esc(site.mainUrl)}" target="_blank" rel="noreferrer" class="main-site-nav-link">Web central <b>↗</b></a>` : '';
   const discord = site.discordUrl ? `<a href="${esc(site.discordUrl)}" target="_blank" rel="noreferrer" class="discord-nav-link">Discord <span class="nav-dot"></span></a>` : '';
   const github = site.githubUrl ? `<a href="${esc(site.githubUrl)}" target="_blank" rel="noreferrer">GitHub</a>` : '';
@@ -28,17 +35,39 @@ function layout({ site, root, title, description, canonicalPath, body, ogType = 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#080c10">
+  <meta name="robots" content="${esc(robots)}">
+  <meta name="googlebot" content="${esc(robots)}">
+  <meta name="author" content="StickyBit">
+  <meta name="publisher" content="StickyBit">
+  <meta name="keywords" content="${esc(keywords)}">
+  <meta name="geo.region" content="ES">
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}">
   <link rel="canonical" href="${esc(canonical)}">
+  <link rel="alternate" hreflang="es" href="${esc(canonical)}">
+  <link rel="alternate" hreflang="x-default" href="${esc(canonical)}">
+  <link rel="sitemap" type="application/xml" href="${root}sitemap.xml">
   <link rel="icon" type="image/svg+xml" href="${root}favicon.svg">
   <meta property="og:site_name" content="${esc(site.name)}">
   <meta property="og:type" content="${ogType}">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(description)}">
   <meta property="og:url" content="${esc(canonical)}">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:image" content="${esc(ogImage)}">
+  <meta property="og:image:secure_url" content="${esc(ogImage)}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${esc(title)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${esc(title)}">
+  <meta name="twitter:description" content="${esc(description)}">
+  <meta name="twitter:image" content="${esc(ogImage)}">
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" crossorigin>
+  <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
   <link rel="stylesheet" href="${root}assets/styles.css">
+  ${jsonLd(structured)}
 </head>
 <body>
   <a class="skip" href="#main">Saltar al contenido</a>
@@ -101,13 +130,60 @@ export function renderHome({ site, tools, meta }) {
     <section class="manifesto shell" id="manifesto"><div class="manifesto-card"><span class="section-id">02 / POR QUÉ STICKYBIT</span><p class="statement">El conocimiento crece cuando circula. <strong>StickyBit conecta a quien construye con quien quiere aprender.</strong></p><div class="principles"><article><span>01</span><h3>Aprender haciendo</h3><p>Herramientas, laboratorios y write-ups para convertir curiosidad en experiencia.</p></article><article><span>02</span><h3>Compartir sin ruido</h3><p>Proyectos auditables, documentación clara y acceso directo a sus creadores.</p></article><article><span>03</span><h3>Crecer juntos</h3><p>Una comunidad para practicar, recibir feedback y dar visibilidad al talento.</p></article></div></div></section>
     <section class="contribute shell" id="submit"><div class="contribute-inner"><div><span class="section-id">03 / CONTRIBUYE</span><h2>¿Has construido<br>algo <em>potente?</em></h2></div><div class="contribute-copy"><p>Comparte tu repositorio con StickyBit. Tú mantienes el control; la comunidad te ayuda a llevarlo más lejos.</p><a class="btn light" href="${esc(site.submitUrl)}" target="_blank" rel="noreferrer">Enviar herramienta <span>↗</span></a></div></div><div class="code-note">{ learn: true, share: true, grow: together }</div></section>`;
 
+  const base = site.siteUrl.replace(/\/$/, '');
+  const org = {
+    '@type': 'Organization',
+    '@id': `${site.mainUrl}/#organization`,
+    name: 'StickyBit',
+    url: site.mainUrl,
+    logo: `${base}/favicon.svg`,
+    sameAs: [site.githubUrl, site.discordUrl, site.mainUrl].filter(Boolean),
+  };
+  const structured = [
+    {
+      '@context': 'https://schema.org',
+      '@graph': [
+        org,
+        {
+          '@type': 'WebSite',
+          '@id': `${base}/#website`,
+          url: `${base}/`,
+          name: 'StickyBit Tools',
+          description: 'Directorio abierto de herramientas de ciberseguridad y hacking ético creadas por la comunidad StickyBit.',
+          inLanguage: 'es-ES',
+          publisher: { '@id': org['@id'] },
+          isPartOf: { '@type': 'WebSite', url: site.mainUrl, name: 'StickyBit' },
+        },
+        {
+          '@type': 'CollectionPage',
+          '@id': `${base}/#catalogo`,
+          url: `${base}/`,
+          name: 'Directorio de herramientas de ciberseguridad',
+          inLanguage: 'es-ES',
+          isPartOf: { '@id': `${base}/#website` },
+          mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: tools.length,
+            itemListElement: tools.map((t, i) => ({
+              '@type': 'ListItem',
+              position: i + 1,
+              url: `${base}/tool/${t.slug}/`,
+              name: t.name,
+            })),
+          },
+        },
+      ],
+    },
+  ];
+
   return layout({
     site,
     root: '',
-    title: 'StickyBit Tools — Herramientas de ciberseguridad de la comunidad',
-    description: 'Directorio abierto de herramientas, write-ups y proyectos de ciberseguridad creados por la comunidad StickyBit.',
+    title: 'StickyBit Tools | Herramientas de Ciberseguridad y Hacking Ético Open Source',
+    description: 'Directorio abierto de herramientas de ciberseguridad, pentesting y hacking ético creadas por la comunidad StickyBit. Proyectos open source de GitHub listos para usar.',
     canonicalPath: '/',
     body,
+    structured,
   });
 }
 
@@ -138,14 +214,49 @@ export function renderTool({ site, tool: t, meta }) {
         <div class="modal-actions">${repoBtn}<a class="btn" href="../../#tools">Seguir explorando</a></div>
       </article>
     </div>`;
+  const base = site.siteUrl.replace(/\/$/, '');
+  const url = `${base}/tool/${t.slug}/`;
+  const structured = [
+    {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'SoftwareSourceCode',
+          '@id': `${url}#software`,
+          name: t.name,
+          description: t.description,
+          url,
+          codeRepository: t.repo,
+          ...(lang !== '—' ? { programmingLanguage: lang } : {}),
+          ...(license !== '—' ? { license } : {}),
+          keywords: [CATEGORIES[t.category], ...t.tags].join(', '),
+          inLanguage: 'es-ES',
+          ...(t.added ? { datePublished: t.added } : {}),
+          ...(m.pushed_at ? { dateModified: m.pushed_at } : {}),
+          author: { '@type': 'Person', name: t.author, url: `https://github.com/${t.author}` },
+          isPartOf: { '@type': 'WebSite', url: `${base}/`, name: 'StickyBit Tools' },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'StickyBit', item: site.mainUrl },
+            { '@type': 'ListItem', position: 2, name: 'Tools', item: `${base}/` },
+            { '@type': 'ListItem', position: 3, name: t.name, item: url },
+          ],
+        },
+      ],
+    },
+  ];
   return layout({
     site,
     root: '../../',
-    title: `${t.name} — StickyBit Tools`,
-    description: t.description,
+    title: `${t.name} | Herramienta de ciberseguridad ${CATEGORIES[t.category]} — StickyBit Tools`,
+    description: t.description.length >= 70 ? t.description : `${t.description} — Herramienta de ciberseguridad (${CATEGORIES[t.category]}) open source creada por @${t.author} en la comunidad StickyBit.`,
     canonicalPath: `/tool/${t.slug}/`,
     body,
     ogType: 'article',
+    keywords: [t.name, ...t.tags, CATEGORIES[t.category], DEFAULT_KEYWORDS].join(', '),
+    structured,
   });
 }
 
@@ -156,6 +267,7 @@ export function render404({ site }) {
     title: '404 — StickyBit Tools',
     description: 'Página no encontrada.',
     canonicalPath: '/404.html',
+    robots: 'noindex, follow',
     body: '    <section class="nf shell"><div><b>404</b><h1>Aquí no hay nada.</h1><a class="btn primary" href="/">Volver al inicio <span>→</span></a></div></section>',
   });
 }
