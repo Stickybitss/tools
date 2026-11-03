@@ -102,7 +102,7 @@ function card(t, meta) {
   const search = [t.name, t.author, t.description, t.category, ...t.tags].join(' ').toLowerCase();
   const lang = m.language || t.language;
   const stars = m.stars ? `<span class="stars">★ ${fmtStars(m.stars)}</span>` : '';
-  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author">${renderAvatar(t.author)}@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || CATEGORIES[t.category])}</span></div></a>`;
+  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author">${renderAvatar(t.author)}@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || (t.website && !t.repo ? 'Web' : CATEGORIES[t.category]))}</span></div></a>`;
 }
 
 export function renderHome({ site, tools, meta }) {
@@ -195,11 +195,16 @@ export function renderTool({ site, tool: t, meta }) {
   if (t.demo) status = 'Demo';
   else if (m.archived) status = 'Archivado';
   else if (m.pushed_at) status = Date.now() - Date.parse(m.pushed_at) > 548 * 864e5 ? 'Inactivo' : 'Activo';
-  const metaItems = [['Categoría', CATEGORIES[t.category]], ['Lenguaje', lang], ['Licencia', license], ['Estado', status]];
+  const isWeb = !t.repo && !!t.website;
+  const metaItems = isWeb
+    ? [['Categoría', CATEGORIES[t.category]], ['Tipo', 'Web'], ['Dominio', new URL(t.website).hostname.replace(/^www\./, '')]]
+    : [['Categoría', CATEGORIES[t.category]], ['Lenguaje', lang], ['Licencia', license], ['Estado', status]];
   if (m.stars !== undefined) metaItems.push(['Stars', String(m.stars)]);
   const repoBtn = t.demo
     ? '<a class="btn primary" aria-disabled="true" tabindex="-1">Ver en GitHub <span>↗</span></a>'
-    : `<a class="btn primary" href="${esc(t.repo)}" target="_blank" rel="noreferrer noopener">Ver en GitHub <span>↗</span></a>`;
+    : isWeb
+      ? `<a class="btn primary" href="${esc(t.website)}" target="_blank" rel="noreferrer noopener nofollow ugc">Visitar web <span>↗</span></a>`
+      : `<a class="btn primary" href="${esc(t.repo)}" target="_blank" rel="noreferrer noopener">Ver en GitHub <span>↗</span></a>`;
   const body = `    <div class="tool-page shell">
       <a class="back" href="../../#tools">← Volver al directorio</a>
       <article class="tool-card" data-category="${esc(t.category)}">
@@ -247,6 +252,16 @@ export function renderTool({ site, tool: t, meta }) {
       ],
     },
   ];
+  if (isWeb) {
+    const sw = structured[0]['@graph'][0];
+    sw['@type'] = 'WebApplication';
+    delete sw.codeRepository;
+    delete sw.programmingLanguage;
+    delete sw.license;
+    sw.sameAs = t.website;
+    sw.applicationCategory = 'SecurityApplication';
+    sw.operatingSystem = 'Web';
+  }
   return layout({
     site,
     root: '../../',

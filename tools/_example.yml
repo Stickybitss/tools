@@ -9,4 +9,6 @@ category: recon
 tags: [python, cli]
 # Tu usuario de GitHub
 author: usuario
+# Si tu herramienta es una web y no un repositorio, usa "website" en lugar de "repo":
+#   website: https://mi-herramienta.app/
 # language y license son opcionales: se rellenan solos desde GitHub con "npm run build:github"

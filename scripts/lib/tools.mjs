@@ -22,6 +22,23 @@ const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const TAG_RE = /^[a-z0-9+#.-]{1,20}$/;
 const AUTHOR_RE = /^[A-Za-z0-9_.-]{1,39}$/;
 
+/** Normaliza y valida la URL de una web: https, dominio público, sin credenciales, puerto ni IP. Devuelve la URL o null. */
+export function parseWebsite(input) {
+  let u;
+  try {
+    u = new URL(String(input || '').trim());
+  } catch {
+    return null;
+  }
+  if (u.protocol !== 'https:' || u.username || u.password || u.port) return null;
+  const h = u.hostname.toLowerCase();
+  if (!/^[a-z0-9.-]+$/.test(h) || !h.includes('.') || h.length > 100 || /^[\d.]+$/.test(h)) return null;
+  if (/(^|\.)(localhost|local|internal|lan|home|test|invalid)$/.test(h)) return null;
+  u.hash = '';
+  const out = u.toString();
+  return out.length <= 200 ? out : null;
+}
+
 /** Devuelve { owner, repo } de una URL de GitHub o null. */
 export function parseRepo(url) {
   const m = String(url || '').match(REPO_RE);
@@ -32,11 +49,13 @@ export function parseRepo(url) {
 export function validateTool(slug, t) {
   const errors = [];
   if (!SLUG_RE.test(slug)) errors.push('el nombre del fichero debe ser un slug (a-z, 0-9 y guiones)');
-  for (const k of ['name', 'repo', 'description', 'category', 'author']) {
+  for (const k of ['name', 'description', 'category', 'author']) {
     if (typeof t[k] !== 'string' || !t[k].trim()) errors.push(`falta el campo obligatorio "${k}"`);
   }
   if (t.name && t.name.length > 40) errors.push('"name" no puede superar 40 caracteres');
+  if (!t.repo && !t.website) errors.push('falta "repo" (repositorio de GitHub) o "website" (URL de la web)');
   if (t.repo && !parseRepo(t.repo)) errors.push('"repo" debe ser una URL https://github.com/<usuario>/<repo>');
+  if (t.website && !parseWebsite(t.website)) errors.push('"website" debe ser una URL https:// pública (sin puerto ni IP)');
   if (t.description) {
     if (t.description.length < 3) errors.push('"description" es demasiado corta (mínimo 3 caracteres)');
     if (t.description.length > 300) errors.push('"description" no puede superar 300 caracteres');
@@ -74,8 +93,9 @@ export function loadTools() {
       continue;
     }
     const errors = validateTool(slug, data);
-    const key = data.repo ? data.repo.toLowerCase().replace(/\/$/, '') : null;
-    if (key && seenRepos.has(key)) errors.push(`el repositorio ya está publicado en ${seenRepos.get(key)}`);
+    const linkKey = data.repo || data.website;
+    const key = linkKey ? String(linkKey).toLowerCase().replace(/\/$/, '') : null;
+    if (key && seenRepos.has(key)) errors.push(`este enlace ya está publicado en ${seenRepos.get(key)}`);
     else if (key) seenRepos.set(key, file);
     if (errors.length) {
       problems.push({ file, errors });
@@ -84,7 +104,8 @@ export function loadTools() {
     tools.push({
       slug,
       name: data.name.trim(),
-      repo: data.repo.replace(/\/$/, ''),
+      repo: data.repo ? data.repo.replace(/\/$/, '') : '',
+      website: data.website || '',
       description: data.description.trim(),
       category: data.category,
       tags: data.tags || [],

@@ -46,7 +46,7 @@ export async function fetchRepoMeta(url) {
 /** Actualiza la caché para todas las herramientas no-demo. Los fallos no rompen el build. */
 export async function refreshCache(tools) {
   const cache = readCache();
-  for (const t of tools.filter((x) => !x.demo)) {
+  for (const t of tools.filter((x) => !x.demo && x.repo)) {
     try {
       cache[t.slug] = await fetchRepoMeta(t.repo);
       console.log(`  ✓ ${t.slug}: ★ ${cache[t.slug].stars}${cache[t.slug].logo ? ' [logo detectado]' : ''}`);

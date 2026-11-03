@@ -25,6 +25,7 @@ jobs:
         id: gen
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if node scripts/issue-to-tool.mjs > result.txt 2>&1; then

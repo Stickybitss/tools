@@ -14,8 +14,8 @@ body:
   - type: input
     id: repo
     attributes:
-      label: URL del repositorio
-      description: Debe ser público y estar en GitHub.
+      label: URL del repositorio o de la web
+      description: Un repositorio público de GitHub o la web de tu herramienta (https).
       placeholder: https://github.com/usuario/mi-herramienta
     validations:
       required: true
@@ -45,7 +45,7 @@ body:
       options:
         - label: Soy el autor o tengo permiso del autor para publicarla.
           required: true
-        - label: El repositorio tiene licencia y un README con instrucciones de uso.
+        - label: Si es un repositorio, tiene licencia y un README con instrucciones de uso. Si es una web, es pública y accesible.
           required: true
         - label: No contiene malware, ransomware, datos filtrados ni está pensada para uso malicioso.
           required: true
