@@ -27,7 +27,7 @@ const write = (rel, content) => {
 };
 
 // Assets
-write('assets/styles.css', fs.readFileSync(path.join(ROOT, 'src/styles.css'), 'utf8') + '\n' + fs.readFileSync(path.join(ROOT, 'src/extra.css'), 'utf8'));
+write('assets/styles.css', fs.readFileSync(path.join(ROOT, 'src/styles.css'), 'utf8'));
 write('assets/app.js', fs.readFileSync(path.join(ROOT, 'src/client.js'), 'utf8'));
 write('favicon.svg', FAVICON);
 write('og-image.png', fs.readFileSync(path.join(ROOT, 'src/og-image.png')));

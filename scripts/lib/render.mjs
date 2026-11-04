@@ -71,11 +71,11 @@ function layout({ site, root, title, description, canonicalPath, body, ogType = 
 </head>
 <body>
   <a class="skip" href="#main">Saltar al contenido</a>
-  <header><nav class="shell"><a class="brand" href="${root}" aria-label="StickyBit, inicio">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><div class="links"><a href="${root}#tools" data-section="tools">Explorar</a><a href="${root}#manifesto" data-section="manifesto">Comunidad</a>${mainSite}${discord}<a class="submit-link" href="${root}#submit" data-section="submit">Subir herramienta <b>↗</b></a></div><button class="menu" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></nav></header>
+  <header><nav class="shell"><a class="brand" href="${root}" aria-label="StickyBit, inicio">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><div class="links"><a href="${root}#tools" data-section="tools">Explorar</a>${mainSite}${discord}<a class="submit-link" href="${root}#submit" data-section="submit">Subir herramienta <b>↗</b></a></div><button class="menu" aria-label="Abrir menú" aria-expanded="false"><i></i><i></i></button></nav></header>
   <main id="main">
 ${body}
   </main>
-  <footer class="shell"><a class="brand" href="${root}">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><p>Aprender, compartir y crecer en ciberseguridad.</p><div class="foot-links"><a href="${esc(site.mainUrl || 'https://www.stickybit.es')}" target="_blank" rel="noreferrer">stickybit.es</a>${github}${discord}<span>© ${new Date().getFullYear()}</span></div></footer>
+  <footer class="shell"><a class="brand" href="${root}">${MARK}<span class="brand-word">STICKY<b>BIT</b></span></a><div class="foot-links"><a href="${esc(site.mainUrl || 'https://www.stickybit.es')}" target="_blank" rel="noreferrer">stickybit.es</a>${github}${discord}<span>© ${new Date().getFullYear()}</span></div></footer>
   <script src="${root}assets/app.js" defer></script>
 </body>
 </html>
@@ -98,37 +98,32 @@ function renderAvatar(author, size = 64) {
 }
 
 function card(t, meta) {
-  const m = meta[t.slug] || {};
   const search = [t.name, t.author, t.description, t.category, ...t.tags].join(' ').toLowerCase();
-  const lang = m.language || t.language;
-  const stars = m.stars ? `<span class="stars">★ ${fmtStars(m.stars)}</span>` : '';
-  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="right">${t.demo ? '<span class="badge">demo</span>' : ''}${stars}<span class="repo-arrow">↗</span></span></div><div class="card-main"><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="card-foot"><span class="author">${renderAvatar(t.author)}@${esc(t.author)}</span><span class="lang"><i></i>${esc(lang || (t.website && !t.repo ? 'Web' : CATEGORIES[t.category]))}</span></div></a>`;
+  const demo = t.demo ? '<span class="badge">demo</span>' : '';
+  return `<a class="card" href="tool/${esc(t.slug)}/" data-category="${esc(t.category)}" data-search="${esc(search)}" aria-label="Ver ${esc(t.name)}"><div class="card-top">${renderIcon(t, meta)}<span class="cat"><i></i>${esc(CATEGORIES[t.category])}${demo}</span></div><h3>${esc(t.name)}</h3><p>${esc(t.description)}</p><div class="tags">${t.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div><div class="card-foot"><span class="author">${renderAvatar(t.author)}@${esc(t.author)}</span><span class="repo-arrow">↗</span></div></a>`;
 }
 
 export function renderHome({ site, tools, meta }) {
-  const hasDemo = tools.some((t) => t.demo);
-  const real = tools.filter((t) => !t.demo).length;
-  const makers = new Set(tools.map((t) => t.author.toLowerCase())).size;
   const used = Object.keys(CATEGORIES).filter((c) => tools.some((t) => t.category === c));
   const filters = ['<button class="filter active" data-filter="all">Todas</button>']
     .concat(used.map((c) => `<button class="filter" data-filter="${c}">${esc(CATEGORIES[c])}</button>`))
     .join('');
-  const tick = ['PENTESTING', 'DEFENSIVA', 'CTFS', 'WRITE-UPS', 'CERTIFICACIONES']
-    .map((x) => `<span>${x}</span>`)
-    .join('<i>✦</i>') + '<i>✦</i>';
 
   const body = `    <section class="hero shell"><div class="hero-art" aria-hidden="true"><div class="hero-word">STICKYBIT</div><small>OFFENSIVE SECURITY / COMMUNITY</small></div>
-      <div><div class="eyebrow"><i></i> comunidad de ciberseguridad${hasDemo ? ' · demo' : ''}</div><h1>Aprende.<br>Comparte. <em>Crece.</em></h1><p class="lead">Un directorio abierto de herramientas, write-ups y proyectos de seguridad creados por la comunidad. Código real para gente que quiere avanzar.</p><div class="actions"><a class="btn primary" href="#tools">Explorar herramientas <span>↓</span></a><a class="btn" href="${esc(site.discordUrl || '#')}" target="_blank" rel="noreferrer">Unirse a Discord <span>💬</span></a><a class="btn" href="#submit">Publicar mi proyecto <span>↗</span></a></div></div>
-      <div class="terminal" id="terminal-window" tabindex="0"><div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>stickybit@community:~</span><em class="term-status"><span class="live-dot"></span> interactiva</em></div><div class="term-body" id="term-body"><div id="term-output"><p class="term-line welcome">StickyBit Interactive Shell <span class="term-ver">v1.2</span></p><p class="term-line dim">Escribe <span class="cmd-tag">help</span> para ver los comandos disponibles.</p><div class="term-spacer"></div></div><div class="term-input-row"><span class="prompt-arrow">➜</span> <span class="prompt-tilde">~</span> <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" placeholder="escribe help..."></div></div></div>
-      <div class="hero-stats"><div><strong>${String(hasDemo ? tools.length : real).padStart(2, '0')}</strong><span>tools${hasDemo ? ' demo' : ''}</span></div><div><strong>${String(makers).padStart(2, '0')}</strong><span>makers</span></div><div><strong>100%</strong><span>open source</span></div></div>
+      <div class="hero-copy">
+        <div class="eyebrow"><i></i> comunidad de ciberseguridad</div>
+        <h1>Herramientas de ciberseguridad <em>hechas por la comunidad.</em></h1>
+        <p class="lead">Un directorio abierto de proyectos creados por sus propios autores. Código real para gente que quiere avanzar.</p>
+        <div class="actions"><a class="btn primary" href="#tools">Explorar herramientas <span>↓</span></a><a class="btn" href="${esc(site.discordUrl || '#')}" target="_blank" rel="noreferrer">Unirse a Discord <span>💬</span></a><a class="btn" href="#submit">Publicar mi proyecto <span>↗</span></a></div>
+      </div>
+      <div class="terminal" id="terminal-window" tabindex="0"><div class="term-head"><div class="dots"><i></i><i></i><i></i></div><span>stickybit@community:~</span><em class="term-status"><span class="live-dot"></span> interactiva</em></div><div class="term-body" id="term-body"><div id="term-output"><p class="term-line welcome">StickyBit Interactive Shell <span class="term-ver">v1.2</span></p><p class="term-line dim">Escribe <span class="cmd-tag">help</span> para ver los comandos disponibles.</p><div class="term-spacer"></div></div><div class="term-input-row"><span class="prompt-arrow">➜</span> <span class="prompt-tilde">~</span> <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false" placeholder="escribe help..." aria-label="Terminal interactiva"></div></div></div>
     </section>
-    <div class="ticker" aria-hidden="true"><div class="ticker-track"><div class="ticker-group">${tick}</div><div class="ticker-group">${tick}</div></div></div>
-    <section class="directory shell" id="tools"><div class="section-head"><div><span class="section-id">01 / DIRECTORIO</span><h2>Explora el arsenal</h2></div><p>Proyectos compartidos por sus propios creadores.${hasDemo ? '<br><span class="demo-note">Contenido ilustrativo mientras llegan las primeras herramientas reales.</span>' : ''}</p></div>
+    <section class="directory shell" id="tools">
+      <div class="section-head"><h2>Explora el arsenal</h2><span class="count">${tools.length} ${tools.length === 1 ? 'herramienta' : 'herramientas'}</span></div>
       <div class="controls"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg><input id="search" type="search" placeholder="Buscar herramienta, autor o tag..." autocomplete="off" aria-label="Buscar herramientas"><kbd>/</kbd></label><div class="filters" role="group" aria-label="Categorías">${filters}</div></div>
       <div class="tools" id="grid" aria-live="polite">${tools.map((t) => card(t, meta)).join('\n')}</div><div class="empty" id="empty"><b>404</b>No encontramos herramientas con esos filtros.</div>
     </section>
-    <section class="manifesto shell" id="manifesto"><div class="manifesto-card"><span class="section-id">02 / POR QUÉ STICKYBIT</span><p class="statement">El conocimiento crece cuando circula. <strong>StickyBit conecta a quien construye con quien quiere aprender.</strong></p><div class="principles"><article><span>01</span><h3>Aprender haciendo</h3><p>Herramientas, laboratorios y write-ups para convertir curiosidad en experiencia.</p></article><article><span>02</span><h3>Compartir sin ruido</h3><p>Proyectos auditables, documentación clara y acceso directo a sus creadores.</p></article><article><span>03</span><h3>Crecer juntos</h3><p>Una comunidad para practicar, recibir feedback y dar visibilidad al talento.</p></article></div></div></section>
-    <section class="contribute shell" id="submit"><div class="contribute-inner"><div><span class="section-id">03 / CONTRIBUYE</span><h2>¿Has construido<br>algo <em>potente?</em></h2></div><div class="contribute-copy"><p>Comparte tu repositorio con StickyBit. Tú mantienes el control; la comunidad te ayuda a llevarlo más lejos.</p><a class="btn light" href="${esc(site.submitUrl)}" target="_blank" rel="noreferrer">Enviar herramienta <span>↗</span></a></div></div><div class="code-note">{ learn: true, share: true, grow: together }</div></section>`;
+    <section class="contribute shell" id="submit"><div class="contribute-inner"><div><h2>¿Has creado algo útil?</h2><p>Comparte tu repositorio o tu web con la comunidad. Tú mantienes el control; nosotros te damos visibilidad.</p></div><div class="actions"><a class="btn primary" href="${esc(site.submitUrl)}" target="_blank" rel="noreferrer">Enviar herramienta <span>↗</span></a><a class="btn" href="${esc(site.discordUrl || '#')}" target="_blank" rel="noreferrer">Unirse a Discord</a></div></div></section>`;
 
   const base = site.siteUrl.replace(/\/$/, '');
   const org = {
